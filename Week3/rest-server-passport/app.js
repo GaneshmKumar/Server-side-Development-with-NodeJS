@@ -2,7 +2,7 @@
 * @Author: GaNeShKuMaRm
 * @Date:   2017-02-28 18:16:04
 * @Last Modified by:   GaNeShKuMaRm
-* @Last Modified time: 2017-03-14 23:50:12
+* @Last Modified time: 2017-04-01 11:00:46
 */
 
 'use strict';
@@ -11,16 +11,26 @@ var express = require('express');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var passport = require('passport');
-var LocalStategy = require('passport-local').Strategy;
+var authenticate = require('./authenticate');
 var cookieParser = require('cookie-parser');
 var path = require('path');
-
+var passport = require('passport');
 var hostname = 'localhost';
 var port  = 3000;
 
 var  app = express();
+/*
+app.all('*', function(req, res, next) {
+    if(req.secure) {
+        return next();
+    }
+    res.redirect('https://' + req.hostname + ':' + app.get('secPort') + req.url);
+});
+*/
+app.get('/', function(req, res, next) {
+    res.end('Hi There');
 
+});
 var config = require('./config');
 mongoose.connect(config.mongoUrl);
 
@@ -39,18 +49,16 @@ var userRouter = require('./routes/users');
 var dishRouter = require('./routes/dishRouter');
 var leadershipRouter = require('./routes/leadershipRouter');
 var promotionRouter = require('./routes/promotionRouter');
+var favoritesRouter = require('./routes/favoritesRouter');
 
-var User = require('./models/user');
 app.use(passport.initialize());
-passport.use(new LocalStategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/users', userRouter);
 app.use('/dishes', dishRouter);
 app.use('/leadership', leadershipRouter);
 app.use('/promotions', promotionRouter);
+app.use('/favorites', favoritesRouter);
 
 app.listen(port, hostname, function() {
     console.log(`Server running at http://${hostname}:${port}`);

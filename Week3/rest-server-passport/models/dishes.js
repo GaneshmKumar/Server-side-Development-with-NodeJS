@@ -2,7 +2,7 @@
 * @Author: GaNeShKuMaRm
 * @Date:   2017-03-11 21:07:08
 * @Last Modified by:   GaNeShKuMaRm
-* @Last Modified time: 2017-03-11 21:25:00
+* @Last Modified time: 2017-03-15 16:21:45
 */
 
 'use strict';
@@ -24,9 +24,9 @@ var commentSchema = new Schema({
         type: String,
         required: true
     },
-    author:  {
-        type: String,
-        required: true
+    postedBy:  {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 }, {
     timestamps: true
